@@ -1,24 +1,17 @@
 package tgb.cryptoexchange.variables.bulkdiscount.service;
 
-import com.google.protobuf.Empty;
 import enums.CryptoCurrency;
 import enums.DealType;
 import enums.FiatCurrency;
-import io.grpc.stub.StreamObserver;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import tgb.cryptoexchange.grpc.generated.BulkDiscountRequest;
-import tgb.cryptoexchange.grpc.generated.BulkDiscountResponse;
-import tgb.cryptoexchange.grpc.generated.BulkDiscountValueMessage;
-import tgb.cryptoexchange.grpc.generated.UpdateBulkDiscountRequest;
+import tgb.cryptoexchange.grpc.generated.*;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscount;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscountValue;
 import tgb.cryptoexchange.variables.bulkdiscount.repository.BulkDiscountRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -53,10 +46,10 @@ public class BulkDiscountService {
             bulkDiscount.setFiatCurrency(FiatCurrency.valueOfNullable(request.getFiatCurrency()));
             bulkDiscount.setDealType(DealType.valueOfNullable(request.getDealType()));
             bulkDiscount.setCryptoCurrency(CryptoCurrency.valueOfNullable(request.getCryptoCurrency()));
-        }else {
+        } else {
             bulkDiscount.getValue().clear();
         }
-        final  BulkDiscount finalBulkDiscount = bulkDiscount;
+        final BulkDiscount finalBulkDiscount = bulkDiscount;
         request.getValuesList().forEach(v -> {
             BulkDiscountValue newValue = BulkDiscountValue.builder()
                     .discountRate(new BigDecimal(v.getDiscountRate()))
@@ -66,6 +59,24 @@ public class BulkDiscountService {
             finalBulkDiscount.getValue().add(newValue);
         });
         bulkDiscountRepository.save(bulkDiscount);
+    }
+
+    public BigDecimal getDiscount(BulkDiscountWithSumRequest request) {
+        log.debug("getDiscount by request: {}", request);
+        BulkDiscountRequest bulkDiscountRequest = request.getBulkDiscount();
+        BulkDiscount bulkDiscount = bulkDiscountRepository.findByFiatCurrencyAndDealTypeAndCryptoCurrency(
+                bulkDiscountRequest.getFiatCurrency(),
+                bulkDiscountRequest.getDealType(),
+                bulkDiscountRequest.getCryptoCurrency()).orElse(null);
+        if (bulkDiscount == null) {
+            return BigDecimal.ZERO;
+        }
+        for (BulkDiscountValue item : bulkDiscount.getValue()) {
+            if (item.getMinAmount().compareTo(new BigDecimal(request.getSum())) < 1) {
+                return item.getDiscountRate();
+            }
+        }
+        return BigDecimal.ZERO;
     }
 
     private BulkDiscountResponse mapToResponse(BulkDiscount entity) {

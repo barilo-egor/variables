@@ -1,8 +1,5 @@
 package tgb.cryptoexchange.variables.bulkdiscount.repository;
 
-import enums.CryptoCurrency;
-import enums.DealType;
-import enums.FiatCurrency;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

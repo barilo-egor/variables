@@ -8,30 +8,40 @@ import "google/protobuf/empty.proto";
 service BulkDiscountService {
   rpc GetBulkDiscount (BulkDiscountRequest) returns (BulkDiscountResponse);
   rpc UpdateBulkDiscount (UpdateBulkDiscountRequest) returns (google.protobuf.Empty);
+  rpc GetDiscount (BulkDiscountWithSumRequest) returns (DiscountRate);
 }
 
 message BulkDiscountRequest {
-  string fiatCurrency = 1;
-  string dealType = 2;
-  string cryptoCurrency = 3;
+  string fiat_currency = 1;
+  string deal_type = 2;
+  string crypto_currency = 3;
 }
 
 message BulkDiscountResponse {
   int64 id = 1;
-  string fiatCurrency = 2;
-  string dealType = 3;
-  string cryptoCurrency = 4;
+  string fiat_currency = 2;
+  string deal_type = 3;
+  string crypto_currency = 4;
   repeated BulkDiscountValueMessage values = 5;
 }
 
 message BulkDiscountValueMessage {
-  string minAmount = 1;
-  string discountRate = 2;
+  string min_amount = 1;
+  string discount_rate = 2;
 }
 
 message UpdateBulkDiscountRequest {
-  string fiatCurrency = 1;
-  string dealType = 2;
-  string cryptoCurrency = 3;
+  string fiat_currency = 1;
+  string deal_type = 2;
+  string crypto_currency = 3;
   repeated BulkDiscountValueMessage values = 4;
+}
+
+message BulkDiscountWithSumRequest {
+  BulkDiscountRequest bulk_discount = 1;
+  string sum = 2;
+}
+
+message DiscountRate {
+  string discount_rate = 1;
 }
