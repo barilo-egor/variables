@@ -1,6 +1,5 @@
 package enums;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -14,9 +13,6 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Function;
 
-@JsonFormat(
-        shape = JsonFormat.Shape.OBJECT
-)
 public enum FiatCurrency implements ObjectNodeConvertable<FiatCurrency> {
     BYN("byn", "Бел.рубли", "бел.рублей", "\ud83c\udde7\ud83c\uddfe", 2000, 30),
     RUB("rub", "Рос.рубли", "₽", "\ud83c\uddf7\ud83c\uddfa", 50000, 1000),

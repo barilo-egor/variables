@@ -10,10 +10,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tgb.cryptoexchange.grpc.generated.*;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountRequest;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountResponse;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountValueMessage;
+import tgb.cryptoexchange.grpc.generated.UpdateBulkDiscountRequest;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscount;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscountValue;
 import tgb.cryptoexchange.variables.bulkdiscount.repository.BulkDiscountRepository;
+import tgb.cryptoexchange.variables.bulkdiscount.repository.OutboxEventRepository;
 import tgb.cryptoexchange.variables.bulkdiscount.service.BulkDiscountService;
 
 import java.math.BigDecimal;
@@ -21,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +34,9 @@ class BulkDiscountServiceTest {
 
     @Mock
     private BulkDiscountRepository bulkDiscountRepository;
+
+    @Mock
+    private OutboxEventRepository outboxEventRepository;
 
     @InjectMocks
     private BulkDiscountService bulkDiscountService;
@@ -52,7 +60,7 @@ class BulkDiscountServiceTest {
     @Test
     void getBulkDiscount_Found_ReturnsMappedResponse() {
         BulkDiscountRequest request = BulkDiscountRequest.newBuilder()
-                .setFiatCurrency("RUB").setDealType("BUY").setCryptoCurrency("BTC").build();
+                .setFiatCurrency("RUB").setDealType("BUY").setCryptoCurrency("BITCOIN").build();
 
         when(bulkDiscountRepository.findByFiatCurrencyAndDealTypeAndCryptoCurrency(anyString(), anyString(), anyString()))
                 .thenReturn(Optional.of(testEntity));
@@ -68,7 +76,7 @@ class BulkDiscountServiceTest {
     @Test
     void updateBulkDiscount_ExistingEntity_ClearsAndAddsNewValues() {
         UpdateBulkDiscountRequest request = UpdateBulkDiscountRequest.newBuilder()
-                .setFiatCurrency("RUB").setDealType("BUY").setCryptoCurrency("BTC")
+                .setFiatCurrency("RUB").setDealType("BUY").setCryptoCurrency("BITCOIN")
                 .addValues(BulkDiscountValueMessage.newBuilder().setMinAmount("2000").setDiscountRate("10").build())
                 .build();
 
@@ -85,34 +93,4 @@ class BulkDiscountServiceTest {
         assertEquals(new BigDecimal("10"), saved.getValue().getFirst().getDiscountRate());
     }
 
-    @Test
-    void getDiscount_ShouldReturnHighestApplicableDiscount() {
-        BulkDiscountWithSumRequest request = BulkDiscountWithSumRequest.newBuilder()
-                .setSum("800")
-                .setBulkDiscount(BulkDiscountRequest.newBuilder()
-                        .setFiatCurrency("RUB").setDealType("BUY").setCryptoCurrency("BITCOIN").build())
-                .build();
-
-        when(bulkDiscountRepository.findByFiatCurrencyAndDealTypeAndCryptoCurrency(anyString(), anyString(), anyString()))
-                .thenReturn(Optional.of(testEntity));
-
-        BigDecimal result = bulkDiscountService.getDiscount(request);
-
-        assertEquals(new BigDecimal("2"), result);
-    }
-
-    @Test
-    void getDiscount_NoEntityFound_ReturnsZero() {
-        BulkDiscountWithSumRequest request = BulkDiscountWithSumRequest.newBuilder()
-                .setSum("1000")
-                .setBulkDiscount(BulkDiscountRequest.newBuilder().build())
-                .build();
-
-        when(bulkDiscountRepository.findByFiatCurrencyAndDealTypeAndCryptoCurrency(any(), any(), any()))
-                .thenReturn(Optional.empty());
-
-        BigDecimal result = bulkDiscountService.getDiscount(request);
-
-        assertEquals(BigDecimal.ZERO, result);
-    }
 }

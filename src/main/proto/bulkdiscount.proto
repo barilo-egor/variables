@@ -8,7 +8,6 @@ import "google/protobuf/empty.proto";
 service BulkDiscountService {
   rpc GetBulkDiscount (BulkDiscountRequest) returns (BulkDiscountResponse);
   rpc UpdateBulkDiscount (UpdateBulkDiscountRequest) returns (google.protobuf.Empty);
-  rpc GetDiscount (BulkDiscountWithSumRequest) returns (DiscountRate);
 }
 
 message BulkDiscountRequest {
@@ -35,13 +34,4 @@ message UpdateBulkDiscountRequest {
   string deal_type = 2;
   string crypto_currency = 3;
   repeated BulkDiscountValueMessage values = 4;
-}
-
-message BulkDiscountWithSumRequest {
-  BulkDiscountRequest bulk_discount = 1;
-  string sum = 2;
-}
-
-message DiscountRate {
-  string discount_rate = 1;
 }

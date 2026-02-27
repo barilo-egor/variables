@@ -1,5 +1,6 @@
 package tgb.cryptoexchange.variables.bulkdiscount.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import enums.CryptoCurrency;
 import enums.DealType;
 import enums.FiatCurrency;
@@ -9,18 +10,27 @@ import org.springframework.stereotype.Service;
 import tgb.cryptoexchange.grpc.generated.*;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscount;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscountValue;
+import tgb.cryptoexchange.variables.bulkdiscount.entity.OutboxEvent;
 import tgb.cryptoexchange.variables.bulkdiscount.repository.BulkDiscountRepository;
+import tgb.cryptoexchange.variables.bulkdiscount.repository.OutboxEventRepository;
+import tgb.cryptoexchange.variables.bulkdiscount.util.EventUtil;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class BulkDiscountService {
 
     private final BulkDiscountRepository bulkDiscountRepository;
+    private final OutboxEventRepository outboxEventRepository;
 
-    public BulkDiscountService(BulkDiscountRepository bulkDiscountRepository) {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public BulkDiscountService(BulkDiscountRepository bulkDiscountRepository, OutboxEventRepository outboxEventRepository) {
         this.bulkDiscountRepository = bulkDiscountRepository;
+        this.outboxEventRepository = outboxEventRepository;
     }
 
     public BulkDiscountResponse getBulkDiscount(BulkDiscountRequest request) {
@@ -59,24 +69,25 @@ public class BulkDiscountService {
             finalBulkDiscount.getValue().add(newValue);
         });
         bulkDiscountRepository.save(bulkDiscount);
+
+        saveOutboxEvent(bulkDiscount);
     }
 
-    public BigDecimal getDiscount(BulkDiscountWithSumRequest request) {
-        log.debug("getDiscount by request: {}", request);
-        BulkDiscountRequest bulkDiscountRequest = request.getBulkDiscount();
-        BulkDiscount bulkDiscount = bulkDiscountRepository.findByFiatCurrencyAndDealTypeAndCryptoCurrency(
-                bulkDiscountRequest.getFiatCurrency(),
-                bulkDiscountRequest.getDealType(),
-                bulkDiscountRequest.getCryptoCurrency()).orElse(null);
-        if (bulkDiscount == null) {
-            return BigDecimal.ZERO;
-        }
-        for (BulkDiscountValue item : bulkDiscount.getValue()) {
-            if (item.getMinAmount().compareTo(new BigDecimal(request.getSum())) < 1) {
-                return item.getDiscountRate();
-            }
-        }
-        return BigDecimal.ZERO;
+    private void saveOutboxEvent(BulkDiscount bulkDiscount) {
+        Optional<OutboxEvent> outboxEventOptional = outboxEventRepository.findByAggregateId(bulkDiscount.getId());
+        OutboxEvent outboxEvent = OutboxEvent.builder()
+                .aggregateId(bulkDiscount.getId())
+                .payload(EventUtil.mapToEvent(bulkDiscount))
+                .processed(false)
+                .build();
+        outboxEventOptional.ifPresent(event -> outboxEvent.setId(event.getId()));
+        outboxEventRepository.save(outboxEvent);
+    }
+
+    @Transactional
+    public void syncBulkDiscountAndOutboxEvent(){
+        List<BulkDiscount> allDiscounts = bulkDiscountRepository.findAll();
+        allDiscounts.forEach(this::saveOutboxEvent);
     }
 
     private BulkDiscountResponse mapToResponse(BulkDiscount entity) {

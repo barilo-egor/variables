@@ -3,10 +3,11 @@ package tgb.cryptoexchange.variables.bulkdiscount.controller;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import org.springframework.stereotype.Service;
-import tgb.cryptoexchange.grpc.generated.*;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountRequest;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountResponse;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountServiceGrpc;
+import tgb.cryptoexchange.grpc.generated.UpdateBulkDiscountRequest;
 import tgb.cryptoexchange.variables.bulkdiscount.service.BulkDiscountService;
-
-import java.math.BigDecimal;
 
 @Service
 public class BulkDiscountController extends BulkDiscountServiceGrpc.BulkDiscountServiceImplBase {
@@ -35,11 +36,4 @@ public class BulkDiscountController extends BulkDiscountServiceGrpc.BulkDiscount
         responseObserver.onCompleted();
     }
 
-    @Override
-    public void getDiscount(BulkDiscountWithSumRequest request, StreamObserver<DiscountRate> responseObserver) {
-        BigDecimal discount = bulkDiscountService.getDiscount(request);
-        DiscountRate discountRate = DiscountRate.newBuilder().setDiscountRate(String.valueOf(discount)).build();
-        responseObserver.onNext(discountRate);
-        responseObserver.onCompleted();
-    }
 }

@@ -5,17 +5,18 @@ import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tgb.cryptoexchange.grpc.generated.*;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountRequest;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountResponse;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountValueMessage;
+import tgb.cryptoexchange.grpc.generated.UpdateBulkDiscountRequest;
 import tgb.cryptoexchange.variables.bulkdiscount.controller.BulkDiscountController;
+import tgb.cryptoexchange.variables.bulkdiscount.repository.OutboxEventRepository;
 import tgb.cryptoexchange.variables.bulkdiscount.service.BulkDiscountService;
 
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BulkDiscountControllerTest {
@@ -24,13 +25,13 @@ class BulkDiscountControllerTest {
     private BulkDiscountService bulkDiscountService;
 
     @Mock
+    private OutboxEventRepository outboxEventRepository;
+
+    @Mock
     private StreamObserver<BulkDiscountResponse> bulkDiscountResponseObserver;
 
     @Mock
     private StreamObserver<Empty> emptyResponseObserver;
-
-    @Mock
-    private StreamObserver<DiscountRate> discountRateResponseObserver;
 
     private BulkDiscountController bulkDiscountController;
 
@@ -76,20 +77,4 @@ class BulkDiscountControllerTest {
         verify(emptyResponseObserver).onCompleted();
     }
 
-    @Test
-    void getDiscount_Success() {
-        BulkDiscountWithSumRequest request = BulkDiscountWithSumRequest.newBuilder().setSum("1000").build();
-        BigDecimal expectedDiscount = new BigDecimal("2.5");
-        when(bulkDiscountService.getDiscount(request)).thenReturn(expectedDiscount);
-
-        ArgumentCaptor<DiscountRate> captor = ArgumentCaptor.forClass(DiscountRate.class);
-
-        bulkDiscountController.getDiscount(request, discountRateResponseObserver);
-
-        verify(discountRateResponseObserver).onNext(captor.capture());
-        verify(discountRateResponseObserver).onCompleted();
-
-        DiscountRate capturedRate = captor.getValue();
-        assertEquals("2.5", capturedRate.getDiscountRate());
-    }
 }
