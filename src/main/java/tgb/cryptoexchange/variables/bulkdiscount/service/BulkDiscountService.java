@@ -1,36 +1,51 @@
 package tgb.cryptoexchange.variables.bulkdiscount.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import enums.CryptoCurrency;
 import enums.DealType;
 import enums.FiatCurrency;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import tgb.cryptoexchange.grpc.generated.*;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountRequest;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountResponse;
+import tgb.cryptoexchange.grpc.generated.BulkDiscountValueMessage;
+import tgb.cryptoexchange.grpc.generated.UpdateBulkDiscountRequest;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscount;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscountValue;
-import tgb.cryptoexchange.variables.bulkdiscount.entity.OutboxEvent;
 import tgb.cryptoexchange.variables.bulkdiscount.repository.BulkDiscountRepository;
-import tgb.cryptoexchange.variables.bulkdiscount.repository.OutboxEventRepository;
 import tgb.cryptoexchange.variables.bulkdiscount.util.EventUtil;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class BulkDiscountService {
 
     private final BulkDiscountRepository bulkDiscountRepository;
-    private final OutboxEventRepository outboxEventRepository;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final BulkDiscountEventService bulkDiscountEventService;
 
-    public BulkDiscountService(BulkDiscountRepository bulkDiscountRepository, OutboxEventRepository outboxEventRepository) {
+    private final boolean isSendBulkDiscountEnabled;
+
+    public BulkDiscountService(BulkDiscountRepository bulkDiscountRepository,
+                               @Autowired(required = false) BulkDiscountEventService bulkDiscountEventService,
+     @Value("${variables.bulk-discount.send-all-after-start:true}") boolean isSendBulkDiscountEnabled) {
         this.bulkDiscountRepository = bulkDiscountRepository;
-        this.outboxEventRepository = outboxEventRepository;
+        this.bulkDiscountEventService = bulkDiscountEventService;
+        this.isSendBulkDiscountEnabled = isSendBulkDiscountEnabled;
+    }
+
+    @PostConstruct
+    public void sendBulkDiscountEventAfterStart() {
+        if (isSendBulkDiscountEnabled) {
+            List<BulkDiscountResponse> bulkDiscounts = findAll();
+            bulkDiscountEventService.process(EventUtil.mapToEvent(bulkDiscounts));
+        }
     }
 
     public BulkDiscountResponse getBulkDiscount(BulkDiscountRequest request) {
@@ -41,6 +56,11 @@ public class BulkDiscountService {
                         request.getCryptoCurrency())
                 .map(this::mapToResponse)
                 .orElse(null);
+    }
+
+    public List<BulkDiscountResponse> findAll() {
+        log.debug("findAll bulkDiscount");
+        return bulkDiscountRepository.findAll().stream().map(this::mapToResponse).toList();
     }
 
     @Transactional
@@ -70,24 +90,9 @@ public class BulkDiscountService {
         });
         bulkDiscountRepository.save(bulkDiscount);
 
-        saveOutboxEvent(bulkDiscount);
-    }
-
-    private void saveOutboxEvent(BulkDiscount bulkDiscount) {
-        Optional<OutboxEvent> outboxEventOptional = outboxEventRepository.findByAggregateId(bulkDiscount.getId());
-        OutboxEvent outboxEvent = OutboxEvent.builder()
-                .aggregateId(bulkDiscount.getId())
-                .payload(EventUtil.mapToEvent(bulkDiscount))
-                .processed(false)
-                .build();
-        outboxEventOptional.ifPresent(event -> outboxEvent.setId(event.getId()));
-        outboxEventRepository.save(outboxEvent);
-    }
-
-    @Transactional
-    public void syncBulkDiscountAndOutboxEvent(){
-        List<BulkDiscount> allDiscounts = bulkDiscountRepository.findAll();
-        allDiscounts.forEach(this::saveOutboxEvent);
+        if (bulkDiscountEventService != null) {
+            bulkDiscountEventService.process(EventUtil.mapToEvent(Collections.singletonList((mapToResponse(bulkDiscount)))));
+        }
     }
 
     private BulkDiscountResponse mapToResponse(BulkDiscount entity) {

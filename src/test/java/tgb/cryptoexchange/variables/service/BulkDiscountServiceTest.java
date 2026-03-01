@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tgb.cryptoexchange.grpc.generated.BulkDiscountRequest;
@@ -17,7 +16,7 @@ import tgb.cryptoexchange.grpc.generated.UpdateBulkDiscountRequest;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscount;
 import tgb.cryptoexchange.variables.bulkdiscount.entity.BulkDiscountValue;
 import tgb.cryptoexchange.variables.bulkdiscount.repository.BulkDiscountRepository;
-import tgb.cryptoexchange.variables.bulkdiscount.repository.OutboxEventRepository;
+import tgb.cryptoexchange.variables.bulkdiscount.service.BulkDiscountEventService;
 import tgb.cryptoexchange.variables.bulkdiscount.service.BulkDiscountService;
 
 import java.math.BigDecimal;
@@ -35,16 +34,21 @@ class BulkDiscountServiceTest {
     @Mock
     private BulkDiscountRepository bulkDiscountRepository;
 
-    @Mock
-    private OutboxEventRepository outboxEventRepository;
-
-    @InjectMocks
     private BulkDiscountService bulkDiscountService;
+
+    @Mock
+    private BulkDiscountEventService bulkDiscountEventService;
 
     private BulkDiscount testEntity;
 
     @BeforeEach
     void setUp() {
+        bulkDiscountService = new BulkDiscountService(
+                bulkDiscountRepository,
+                bulkDiscountEventService,
+                false
+        );
+
         testEntity = new BulkDiscount();
         testEntity.setId(1L);
         testEntity.setFiatCurrency(FiatCurrency.RUB);

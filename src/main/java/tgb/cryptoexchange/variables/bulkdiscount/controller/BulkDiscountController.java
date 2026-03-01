@@ -3,11 +3,11 @@ package tgb.cryptoexchange.variables.bulkdiscount.controller;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import org.springframework.stereotype.Service;
-import tgb.cryptoexchange.grpc.generated.BulkDiscountRequest;
-import tgb.cryptoexchange.grpc.generated.BulkDiscountResponse;
-import tgb.cryptoexchange.grpc.generated.BulkDiscountServiceGrpc;
-import tgb.cryptoexchange.grpc.generated.UpdateBulkDiscountRequest;
+import org.springframework.util.CollectionUtils;
+import tgb.cryptoexchange.grpc.generated.*;
 import tgb.cryptoexchange.variables.bulkdiscount.service.BulkDiscountService;
+
+import java.util.List;
 
 @Service
 public class BulkDiscountController extends BulkDiscountServiceGrpc.BulkDiscountServiceImplBase {
@@ -33,6 +33,17 @@ public class BulkDiscountController extends BulkDiscountServiceGrpc.BulkDiscount
     public void updateBulkDiscount(UpdateBulkDiscountRequest request, StreamObserver<Empty> responseObserver) {
         bulkDiscountService.updateBulkDiscount(request);
         responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void findAll(Empty request, StreamObserver<FindAllMessage> responseObserver) {
+        List<BulkDiscountResponse> response = bulkDiscountService.findAll();
+        if (CollectionUtils.isEmpty(response)) {
+            responseObserver.onNext(FindAllMessage.getDefaultInstance());
+        } else {
+            responseObserver.onNext(FindAllMessage.newBuilder().addAllValues(response).build());
+        }
         responseObserver.onCompleted();
     }
 

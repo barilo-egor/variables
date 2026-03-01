@@ -22,3 +22,6 @@ spring:
 kafka:
   topic:
     bulk-discount:
+variables:
+  bulk-discount:
+    send-all-after-start: true

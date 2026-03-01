@@ -12,7 +12,6 @@ import tgb.cryptoexchange.grpc.generated.BulkDiscountResponse;
 import tgb.cryptoexchange.grpc.generated.BulkDiscountValueMessage;
 import tgb.cryptoexchange.grpc.generated.UpdateBulkDiscountRequest;
 import tgb.cryptoexchange.variables.bulkdiscount.controller.BulkDiscountController;
-import tgb.cryptoexchange.variables.bulkdiscount.repository.OutboxEventRepository;
 import tgb.cryptoexchange.variables.bulkdiscount.service.BulkDiscountService;
 
 import static org.mockito.Mockito.verify;
@@ -23,9 +22,6 @@ class BulkDiscountControllerTest {
 
     @Mock
     private BulkDiscountService bulkDiscountService;
-
-    @Mock
-    private OutboxEventRepository outboxEventRepository;
 
     @Mock
     private StreamObserver<BulkDiscountResponse> bulkDiscountResponseObserver;

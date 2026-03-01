@@ -13,10 +13,12 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import tgb.cryptoexchange.variables.bulkdiscount.dto.BulkDiscountDTO;
 import tgb.cryptoexchange.variables.bulkdiscount.kafka.BulkDiscountEvent;
 import tgb.cryptoexchange.variables.bulkdiscount.kafka.BulkDiscountEventProducerListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -34,7 +36,7 @@ public class CommonConfig {
 
     @Bean
     @Profile("!kafka-disabled")
-    public ProducerFactory<String, BulkDiscountEvent> bulkDiscountEventProducerFactory(KafkaProperties kafkaProperties) {
+    public ProducerFactory<String, List<BulkDiscountDTO>> bulkDiscountEventProducerFactory(KafkaProperties kafkaProperties) {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -44,10 +46,10 @@ public class CommonConfig {
 
     @Bean
     @Profile("!kafka-disabled")
-    public KafkaTemplate<String, BulkDiscountEvent> bulkDiscountEventKafkaTemplate(
+    public KafkaTemplate<String, List<BulkDiscountDTO>> bulkDiscountEventKafkaTemplate(
             BulkDiscountEventProducerListener bulkDiscountEventProducerListener,
             KafkaProperties kafkaProperties) {
-        KafkaTemplate<String, BulkDiscountEvent> kafkaTemplate = new KafkaTemplate<>(
+        KafkaTemplate<String, List<BulkDiscountDTO>> kafkaTemplate = new KafkaTemplate<>(
                 bulkDiscountEventProducerFactory(kafkaProperties));
         kafkaTemplate.setProducerListener(bulkDiscountEventProducerListener);
         return kafkaTemplate;

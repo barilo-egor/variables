@@ -8,6 +8,7 @@ import "google/protobuf/empty.proto";
 service BulkDiscountService {
   rpc GetBulkDiscount (BulkDiscountRequest) returns (BulkDiscountResponse);
   rpc UpdateBulkDiscount (UpdateBulkDiscountRequest) returns (google.protobuf.Empty);
+  rpc FindAll (google.protobuf.Empty) returns (FindAllMessage);
 }
 
 message BulkDiscountRequest {
@@ -34,4 +35,8 @@ message UpdateBulkDiscountRequest {
   string deal_type = 2;
   string crypto_currency = 3;
   repeated BulkDiscountValueMessage values = 4;
+}
+
+message FindAllMessage {
+  repeated BulkDiscountResponse values = 1;
 }
