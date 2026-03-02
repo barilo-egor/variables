@@ -1,0 +1,30 @@
+springdoc:
+  swagger-ui:
+    enabled: "true"
+    path: "/swagger"
+  api-docs:
+    path: "/swagger/api-docs"
+server:
+  port:
+spring:
+  datasource:
+    username: ""
+    password: ""
+    url: ""
+    driver-class-name:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  grpc:
+    server:
+      port:
+  kafka:
+    bootstrap-servers: ""
+  profiles:
+    active:
+kafka:
+  topic:
+    bulk-discount: ""
+variables:
+  bulk-discount:
+    send-all-after-start: true
