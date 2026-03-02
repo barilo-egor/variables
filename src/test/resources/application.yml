@@ -20,8 +20,6 @@ spring:
       port:
   kafka:
     bootstrap-servers: ""
-  profiles:
-    active:
 kafka:
   topic:
     bulk-discount: "test-event-discount-update"
