@@ -14,3 +14,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto:
+  grpc:
+    server:
+      port:
+  kafka:
+    bootstrap-servers:
+kafka:
+  topic:
+    bulk-discount:
+variables:
+  bulk-discount:
+    send-all-after-start: true

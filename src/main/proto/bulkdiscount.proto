@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option java_package = "tgb.cryptoexchange.grpc.generated";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+service BulkDiscountService {
+  rpc GetBulkDiscount (BulkDiscountRequest) returns (BulkDiscountResponse);
+  rpc UpdateBulkDiscount (UpdateBulkDiscountRequest) returns (google.protobuf.Empty);
+  rpc FindAll (google.protobuf.Empty) returns (FindAllMessage);
+}
+
+message BulkDiscountRequest {
+  string fiat_currency = 1;
+  string deal_type = 2;
+  string crypto_currency = 3;
+}
+
+message BulkDiscountResponse {
+  int64 id = 1;
+  string fiat_currency = 2;
+  string deal_type = 3;
+  string crypto_currency = 4;
+  repeated BulkDiscountValueMessage values = 5;
+}
+
+message BulkDiscountValueMessage {
+  string min_amount = 1;
+  string discount_rate = 2;
+}
+
+message UpdateBulkDiscountRequest {
+  string fiat_currency = 1;
+  string deal_type = 2;
+  string crypto_currency = 3;
+  repeated BulkDiscountValueMessage values = 4;
+}
+
+message FindAllMessage {
+  repeated BulkDiscountResponse values = 1;
+}
