@@ -1,5 +1,7 @@
 # variables
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=barilo-egor_variables&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=barilo-egor_variables)
+
 Микросервис variables для единой точки хранения переменных.
 
 Добавлена возможность хранения оптовых скидок. Сервис отправляет ивенты в кафка топик при обновлении сделок, а также при старте приложения. Доступна возможность отключения отправления ивента при старте.
