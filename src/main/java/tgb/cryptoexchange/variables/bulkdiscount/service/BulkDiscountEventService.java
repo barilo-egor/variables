@@ -28,7 +28,7 @@ public class BulkDiscountEventService {
 
     public void process(BulkDiscountEvent bulkDiscountEvent) {
         int countDiscount = bulkDiscountEvent.getValues().size();
-        log.info("Найдено {} событий для отправки", countDiscount);
+        log.trace("Найдено {} событий для отправки", countDiscount);
         if (countDiscount > 0) {
             kafkaTemplate.send(bulkDiscountTopic, bulkDiscountEvent.getValues());
         }
