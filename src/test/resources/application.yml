@@ -1,22 +1,23 @@
-spring:
+server:
   port:
+spring:
   datasource:
-    username:
-    password:
-    url:
+    username: ""
+    password: ""
+    url: ""
     driver-class-name:
   jpa:
     hibernate:
-      ddl-auto:
+      ddl-auto: update
   grpc:
     server:
       host:
       port:
   kafka:
-    bootstrap-servers:
+    bootstrap-servers: ""
 kafka:
   topic:
-    bulk-discount:
+    bulk-discount: "test-event-discount-update"
 variables:
   bulk-discount:
     send-all-after-start: true

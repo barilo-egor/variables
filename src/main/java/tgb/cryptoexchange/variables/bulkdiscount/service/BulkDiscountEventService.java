@@ -27,7 +27,10 @@ public class BulkDiscountEventService {
     }
 
     public void process(BulkDiscountEvent bulkDiscountEvent) {
-        log.info("Найдено {} событий для отправки", bulkDiscountEvent.getValues().size());
-        kafkaTemplate.send(bulkDiscountTopic, bulkDiscountEvent.getValues());
+        int countDiscount = bulkDiscountEvent.getValues().size();
+        log.trace("Найдено {} событий для отправки", countDiscount);
+        if (countDiscount > 0) {
+            kafkaTemplate.send(bulkDiscountTopic, bulkDiscountEvent.getValues());
+        }
     }
 }
