@@ -11,8 +11,7 @@ spring:
       ddl-auto: update
   grpc:
     server:
-      host:
-      port:
+      port: 9090
   kafka:
     bootstrap-servers: ""
 kafka:
