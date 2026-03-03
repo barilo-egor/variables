@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'tgb.cryptoexchange'
-version = '0.0.1'
+version = '1.0'
 description = 'dev-bot variables'
 
 java {
