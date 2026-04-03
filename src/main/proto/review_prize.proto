@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_package = "tgb.cryptoexchange.grpc.generated";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+service ReviewPrizeService {
+  rpc GetReviewPrize (ReviewPrizeRequest) returns (ReviewPrizeResponse);
+  rpc UpdateReviewPrize (UpdateReviewPrizeRequest) returns (google.protobuf.Empty);
+  rpc FindAll (google.protobuf.Empty) returns (FindAllReviewPrizeResponses);
+}
+
+message ReviewPrizeRequest {
+  string fiat_currency = 1;
+}
+
+message ReviewPrizeResponse {
+  int64 id = 1;
+  string fiat_currency = 2;
+  repeated ReviewPrizeValueResponse values = 3;
+}
+
+message ReviewPrizeValueResponse {
+  int32 sum = 1;
+  int32 min_prize = 2;
+  int32 max_prize = 3;
+}
+
+message UpdateReviewPrizeRequest {
+  string fiat_currency = 1;
+  string deal_type = 2;
+  string crypto_currency = 3;
+  repeated ReviewPrizeValueResponse values = 4;
+}
+
+message FindAllReviewPrizeResponses {
+  repeated ReviewPrizeResponse values = 1;
+}
