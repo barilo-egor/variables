@@ -29,9 +29,7 @@ message ReviewPrizeValueResponse {
 
 message UpdateReviewPrizeRequest {
   string fiat_currency = 1;
-  string deal_type = 2;
-  string crypto_currency = 3;
-  repeated ReviewPrizeValueResponse values = 4;
+  repeated ReviewPrizeValueResponse values = 2;
 }
 
 message FindAllReviewPrizeResponses {

@@ -17,6 +17,7 @@ spring:
 kafka:
   topic:
     bulk-discount: "test-event-discount-update"
+    review-prize: "test-event-review-update"
 variables:
   bulk-discount:
     send-all-after-start: true
