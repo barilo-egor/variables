@@ -17,6 +17,9 @@ spring:
 kafka:
   topic:
     bulk-discount:
+    review-prize:
 variables:
   bulk-discount:
     send-all-after-start: true
+  review-prize:
+    send-all-after-start:

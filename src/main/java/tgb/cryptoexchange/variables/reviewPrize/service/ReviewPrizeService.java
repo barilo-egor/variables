@@ -1,9 +1,11 @@
 package tgb.cryptoexchange.variables.reviewPrize.service;
 
 import enums.FiatCurrency;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tgb.cryptoexchange.grpc.generated.ReviewPrizeRequest;
 import tgb.cryptoexchange.grpc.generated.ReviewPrizeResponse;
@@ -25,10 +27,22 @@ public class ReviewPrizeService {
 
     public final ReviewPrizeEventService reviewPrizeEventService;
 
+    private final boolean isSendReviewPrizeEnabled;
+
     public ReviewPrizeService(ReviewPrizeRepository reviewPrizeRepository,
-                              @Autowired(required = false) ReviewPrizeEventService reviewPrizeEventService) {
+                              @Autowired(required = false) ReviewPrizeEventService reviewPrizeEventService,
+                              @Value("${variables.review-prize.send-all-after-start:true}") boolean isSendReviewPrizeEnabled) {
         this.reviewPrizeRepository = reviewPrizeRepository;
         this.reviewPrizeEventService = reviewPrizeEventService;
+        this.isSendReviewPrizeEnabled = isSendReviewPrizeEnabled;
+    }
+
+    @PostConstruct
+    public void sendReviewPrizeEventAfterStart() {
+        if (isSendReviewPrizeEnabled && reviewPrizeEventService != null) {
+            List<ReviewPrizeResponse> reviewPrizeResponses = findAll();
+            reviewPrizeEventService.process(EventUtil.mapToEvent(reviewPrizeResponses));
+        }
     }
 
     public ReviewPrizeResponse getReviewPrize(ReviewPrizeRequest request) {
