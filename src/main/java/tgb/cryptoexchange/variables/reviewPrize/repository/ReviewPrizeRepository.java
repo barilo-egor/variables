@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ReviewPrizeRepository extends JpaRepository<ReviewPrize, Long>, JpaSpecificationExecutor<ReviewPrize> {
 
-    @Query("SELECT b FROM BulkDiscount b WHERE b.fiatCurrency = CAST(:fiat AS string)")
+    @Query("SELECT b FROM ReviewPrize b WHERE b.fiatCurrency = CAST(:fiat AS string)")
     Optional<ReviewPrize> findByFiatCurrency(@Param("fiat") String fiat);
 
 }

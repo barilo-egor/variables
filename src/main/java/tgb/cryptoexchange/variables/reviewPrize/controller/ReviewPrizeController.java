@@ -2,12 +2,14 @@ package tgb.cryptoexchange.variables.reviewPrize.controller;
 
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tgb.cryptoexchange.grpc.generated.*;
 import tgb.cryptoexchange.variables.reviewPrize.service.ReviewPrizeService;
 
 import java.util.List;
 
+@Service
 public class ReviewPrizeController extends ReviewPrizeServiceGrpc.ReviewPrizeServiceImplBase {
 
     private final ReviewPrizeService reviewPrizeService;
