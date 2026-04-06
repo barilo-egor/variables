@@ -15,22 +15,22 @@ import java.util.List;
 @Profile("!kafka-disabled")
 public class ReviewPrizeEventService {
 
-    private final KafkaTemplate<String, List<ReviewPrizeDTO>> kafkaTemplate;
+    private final KafkaTemplate<String, List<ReviewPrizeDTO>> reviewPrizeEventKafkaTemplate;
 
     private final String reviewPrizeTopic;
 
     public ReviewPrizeEventService(
-            KafkaTemplate<String, List<ReviewPrizeDTO>> kafkaTemplate,
+            KafkaTemplate<String, List<ReviewPrizeDTO>> reviewPrizeEventKafkaTemplate,
             @Value("${kafka.topic.review-prize}") String reviewPrizeTopic) {
-        this.kafkaTemplate = kafkaTemplate;
+        this.reviewPrizeEventKafkaTemplate = reviewPrizeEventKafkaTemplate;
         this.reviewPrizeTopic = reviewPrizeTopic;
     }
 
     public void process(ReviewPrizeEvent reviewPrizeEvent) {
-        int countDiscount = reviewPrizeEvent.getValues().size();
-        log.trace("Найдено {} событий для отправки", countDiscount);
-        if (countDiscount > 0) {
-            kafkaTemplate.send(reviewPrizeTopic, reviewPrizeEvent.getValues());
+        int count = reviewPrizeEvent.getValues().size();
+        log.debug("Найдено {} событий для отправки", count);
+        if (count > 0) {
+            reviewPrizeEventKafkaTemplate.send(reviewPrizeTopic, reviewPrizeEvent.getValues());
         }
     }
 }

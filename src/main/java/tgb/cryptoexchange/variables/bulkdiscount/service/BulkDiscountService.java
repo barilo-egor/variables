@@ -42,7 +42,7 @@ public class BulkDiscountService {
 
     @PostConstruct
     public void sendBulkDiscountEventAfterStart() {
-        if (isSendBulkDiscountEnabled) {
+        if (isSendBulkDiscountEnabled && bulkDiscountEventService != null) {
             List<BulkDiscountResponse> bulkDiscounts = findAll();
             bulkDiscountEventService.process(EventUtil.mapToEvent(bulkDiscounts));
         }
