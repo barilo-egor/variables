@@ -16,6 +16,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import tgb.cryptoexchange.variables.bulkdiscount.dto.BulkDiscountDTO;
 import tgb.cryptoexchange.variables.bulkdiscount.kafka.BulkDiscountEvent;
 import tgb.cryptoexchange.variables.bulkdiscount.kafka.BulkDiscountEventProducerListener;
+import tgb.cryptoexchange.variables.prize.review.dto.ReviewPrizeDTO;
+import tgb.cryptoexchange.variables.prize.review.kafka.ReviewPrizeEvent;
+import tgb.cryptoexchange.variables.prize.review.kafka.ReviewPrizeEventProducerListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +55,27 @@ public class CommonConfig {
         KafkaTemplate<String, List<BulkDiscountDTO>> kafkaTemplate = new KafkaTemplate<>(
                 bulkDiscountEventProducerFactory(kafkaProperties));
         kafkaTemplate.setProducerListener(bulkDiscountEventProducerListener);
+        return kafkaTemplate;
+    }
+
+    @Bean
+    @Profile("!kafka-disabled")
+    public ProducerFactory<String, List<ReviewPrizeDTO>> reviewPrizeEventProducerFactory(KafkaProperties kafkaProperties) {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ReviewPrizeEvent.KafkaSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
+
+    @Bean
+    @Profile("!kafka-disabled")
+    public KafkaTemplate<String, List<ReviewPrizeDTO>> reviewPrizeEventKafkaTemplate(
+            ReviewPrizeEventProducerListener reviewPrizeEventProducerListener,
+            KafkaProperties kafkaProperties) {
+        KafkaTemplate<String, List<ReviewPrizeDTO>> kafkaTemplate = new KafkaTemplate<>(
+                reviewPrizeEventProducerFactory(kafkaProperties));
+        kafkaTemplate.setProducerListener(reviewPrizeEventProducerListener);
         return kafkaTemplate;
     }
 
