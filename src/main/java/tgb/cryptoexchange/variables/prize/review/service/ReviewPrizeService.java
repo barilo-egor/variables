@@ -1,4 +1,4 @@
-package tgb.cryptoexchange.variables.reviewPrize.service;
+package tgb.cryptoexchange.variables.prize.review.service;
 
 import enums.FiatCurrency;
 import jakarta.annotation.PostConstruct;
@@ -11,10 +11,10 @@ import tgb.cryptoexchange.grpc.generated.ReviewPrizeRequest;
 import tgb.cryptoexchange.grpc.generated.ReviewPrizeResponse;
 import tgb.cryptoexchange.grpc.generated.ReviewPrizeValueResponse;
 import tgb.cryptoexchange.grpc.generated.UpdateReviewPrizeRequest;
-import tgb.cryptoexchange.variables.reviewPrize.entity.ReviewPrize;
-import tgb.cryptoexchange.variables.reviewPrize.entity.ReviewPrizeValue;
-import tgb.cryptoexchange.variables.reviewPrize.repository.ReviewPrizeRepository;
-import tgb.cryptoexchange.variables.reviewPrize.util.EventUtil;
+import tgb.cryptoexchange.variables.prize.review.entity.ReviewPrize;
+import tgb.cryptoexchange.variables.prize.review.entity.ReviewPrizeValue;
+import tgb.cryptoexchange.variables.prize.review.repository.ReviewPrizeRepository;
+import tgb.cryptoexchange.variables.prize.review.util.EventUtil;
 
 import java.util.Collections;
 import java.util.List;

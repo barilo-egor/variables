@@ -1,4 +1,4 @@
-package tgb.cryptoexchange.variables.reviewPrize.kafka;
+package tgb.cryptoexchange.variables.prize.review.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.support.ProducerListener;
 import org.springframework.stereotype.Service;
-import tgb.cryptoexchange.variables.reviewPrize.dto.ReviewPrizeDTO;
+import tgb.cryptoexchange.variables.prize.review.dto.ReviewPrizeDTO;
 
 import java.util.List;
 

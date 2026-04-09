@@ -1,4 +1,4 @@
-package tgb.cryptoexchange.variables.reviewPrize.dto;
+package tgb.cryptoexchange.variables.prize.review.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

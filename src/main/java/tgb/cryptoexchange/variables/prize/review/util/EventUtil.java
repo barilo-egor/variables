@@ -1,10 +1,10 @@
-package tgb.cryptoexchange.variables.reviewPrize.util;
+package tgb.cryptoexchange.variables.prize.review.util;
 
 import org.springframework.util.CollectionUtils;
 import tgb.cryptoexchange.grpc.generated.ReviewPrizeResponse;
-import tgb.cryptoexchange.variables.reviewPrize.dto.ReviewPrizeDTO;
-import tgb.cryptoexchange.variables.reviewPrize.dto.ReviewPrizeValueDTO;
-import tgb.cryptoexchange.variables.reviewPrize.kafka.ReviewPrizeEvent;
+import tgb.cryptoexchange.variables.prize.review.dto.ReviewPrizeDTO;
+import tgb.cryptoexchange.variables.prize.review.dto.ReviewPrizeValueDTO;
+import tgb.cryptoexchange.variables.prize.review.kafka.ReviewPrizeEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;

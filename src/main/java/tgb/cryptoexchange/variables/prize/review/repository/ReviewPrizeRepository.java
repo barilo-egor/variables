@@ -1,10 +1,10 @@
-package tgb.cryptoexchange.variables.reviewPrize.repository;
+package tgb.cryptoexchange.variables.prize.review.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import tgb.cryptoexchange.variables.reviewPrize.entity.ReviewPrize;
+import tgb.cryptoexchange.variables.prize.review.entity.ReviewPrize;
 
 import java.util.Optional;
 

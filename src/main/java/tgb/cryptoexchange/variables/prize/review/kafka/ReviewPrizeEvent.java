@@ -1,4 +1,4 @@
-package tgb.cryptoexchange.variables.reviewPrize.kafka;
+package tgb.cryptoexchange.variables.prize.review.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serializer;
-import tgb.cryptoexchange.variables.reviewPrize.dto.ReviewPrizeDTO;
+import tgb.cryptoexchange.variables.prize.review.dto.ReviewPrizeDTO;
 
 import java.util.ArrayList;
 import java.util.List;

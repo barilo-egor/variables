@@ -1,4 +1,4 @@
-package tgb.cryptoexchange.variables.reviewPrize.entity;
+package tgb.cryptoexchange.variables.prize.review.entity;
 
 import enums.FiatCurrency;
 import jakarta.persistence.*;

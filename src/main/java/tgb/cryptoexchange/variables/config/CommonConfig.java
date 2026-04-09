@@ -16,9 +16,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import tgb.cryptoexchange.variables.bulkdiscount.dto.BulkDiscountDTO;
 import tgb.cryptoexchange.variables.bulkdiscount.kafka.BulkDiscountEvent;
 import tgb.cryptoexchange.variables.bulkdiscount.kafka.BulkDiscountEventProducerListener;
-import tgb.cryptoexchange.variables.reviewPrize.dto.ReviewPrizeDTO;
-import tgb.cryptoexchange.variables.reviewPrize.kafka.ReviewPrizeEvent;
-import tgb.cryptoexchange.variables.reviewPrize.kafka.ReviewPrizeEventProducerListener;
+import tgb.cryptoexchange.variables.prize.review.dto.ReviewPrizeDTO;
+import tgb.cryptoexchange.variables.prize.review.kafka.ReviewPrizeEvent;
+import tgb.cryptoexchange.variables.prize.review.kafka.ReviewPrizeEventProducerListener;
 
 import java.util.HashMap;
 import java.util.List;
