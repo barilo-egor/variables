@@ -1,9 +1,9 @@
-package enums;
+package tgb.cryptoexchange.variables.enums;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import exceptions.EnumTypeNotFoundException;
-import interfaces.ObjectNodeConvertable;
+import tgb.cryptoexchange.variables.exceptions.EnumTypeNotFoundException;
+import tgb.cryptoexchange.variables.interfaces.ObjectNodeConvertable;
 import lombok.Generated;
 
 import java.io.Serializable;

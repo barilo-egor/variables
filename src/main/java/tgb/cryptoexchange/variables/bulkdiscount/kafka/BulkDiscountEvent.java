@@ -2,7 +2,7 @@ package tgb.cryptoexchange.variables.bulkdiscount.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exceptions.BodyMappingException;
+import tgb.cryptoexchange.variables.exceptions.BodyMappingException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

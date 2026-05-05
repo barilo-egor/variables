@@ -1,8 +1,8 @@
 package tgb.cryptoexchange.variables.bulkdiscount.service;
 
-import enums.CryptoCurrency;
-import enums.DealType;
-import enums.FiatCurrency;
+import tgb.cryptoexchange.variables.enums.CryptoCurrency;
+import tgb.cryptoexchange.variables.enums.DealType;
+import tgb.cryptoexchange.variables.enums.FiatCurrency;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

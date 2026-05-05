@@ -1,4 +1,4 @@
-package exceptions;
+package tgb.cryptoexchange.variables.exceptions;
 
 /**
  * Пробрасывается при ошибках парсинга тела в JSON.

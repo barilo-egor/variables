@@ -1,8 +1,8 @@
 package tgb.cryptoexchange.variables.repository;
 
-import enums.CryptoCurrency;
-import enums.DealType;
-import enums.FiatCurrency;
+import tgb.cryptoexchange.variables.enums.CryptoCurrency;
+import tgb.cryptoexchange.variables.enums.DealType;
+import tgb.cryptoexchange.variables.enums.FiatCurrency;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package exceptions;
+package tgb.cryptoexchange.variables.exceptions;
 
 public class BaseException extends RuntimeException {
     public BaseException() {

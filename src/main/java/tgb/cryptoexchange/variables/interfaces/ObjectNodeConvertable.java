@@ -1,4 +1,4 @@
-package interfaces;
+package tgb.cryptoexchange.variables.interfaces;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 

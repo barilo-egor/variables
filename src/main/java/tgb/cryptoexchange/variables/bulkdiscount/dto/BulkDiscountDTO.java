@@ -1,8 +1,5 @@
 package tgb.cryptoexchange.variables.bulkdiscount.dto;
 
-import enums.CryptoCurrency;
-import enums.DealType;
-import enums.FiatCurrency;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
