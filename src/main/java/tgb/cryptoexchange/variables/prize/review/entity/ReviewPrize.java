@@ -1,6 +1,6 @@
 package tgb.cryptoexchange.variables.prize.review.entity;
 
-import enums.FiatCurrency;
+import tgb.cryptoexchange.variables.enums.FiatCurrency;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

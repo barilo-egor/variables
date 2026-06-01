@@ -1,6 +1,6 @@
 package tgb.cryptoexchange.variables.prize.review.service;
 
-import enums.FiatCurrency;
+import tgb.cryptoexchange.variables.enums.FiatCurrency;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
