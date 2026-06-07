@@ -18,7 +18,7 @@ pipeline {
             steps {
                 sshagent([env.SSH_CRED_ID]) {
                     sh "scp -P ${SSH_PORT} build/libs/variables.jar ${SSH_USER}@${VARIABLES_DEPLOY_HOST}:${VARIABLES_DEPLOY_PATH}/"
-                    sh "ssh -p ${SSH_PORT} ${SSH_USER}@${VARIABLES_DEPLOY_HOST} 'cd /srv/variables && docker rollout --wait 60 --timeout 60 variables'"
+                    sh "ssh -p ${SSH_PORT} ${SSH_USER}@${VARIABLES_DEPLOY_HOST} 'cd /srv/variables && docker rollout --timeout 120 variables'"
                 }
             }
         }
